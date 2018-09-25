@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:th="http://www.thymeleaf.org">
+
+<head>
+ <title>Sign in</title>
+ <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+ <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.min.css">
+</head>
+
+<body style="background-color: #5CDB95">
+    <div>
+                          <br />
+
+<form action="login" method="post">
+        Email <br /><input type="text" name="email" autofocus="autofocus">
+    <br />
+                 <br />
+    
+         Password <br /><input type="password" name="password" />
+             <br />
+                      <br />
+                      <br />
+         
+    <input class="button" type="submit" value="Login" />
+</form>
+
+<h5>Or Sign Up</h5>
+
+    <form action="signup" method="GET">    
+    <input class="button" type="submit" value="Sign Up" />
+    </form>
+        </div>
+        <div class="footer-items">
+<h1><a href="/home"  style="color:white">BlogCity</a></h1>
+
+<a href="${homeLink}" style="color:white">Home</a>
+<p><a href="mailto:duchenjacob@gmail.com"  style="color:white">Feedback</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,18 @@
+package com.jacob.controller;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+public class HomeController {
+
+	//presenting user login view
+	 @RequestMapping(value= {"/home"}, method=RequestMethod.GET)
+	 public ModelAndView login() {
+	  ModelAndView model = new ModelAndView();
+	  
+	  model.setViewName("user/login");
+	  return model;
+	 }
+
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:th="http://www.thymeleaf.org">
+<head>
+ <title>Sign up</title>
+</head>
+<body>
+<div>
+
+<h1>Register</h1>
+	<form action="signup" method="post">
+        First Name: <input type="text" name="firstname" autofocus="autofocus">
+        <br />
+                         <br />
+
+        Last Name: <input type="text" name="lastname">
+	    <br />
+	                     <br />
+
+        Email: <input type="text" name="email">
+    	<br />
+    	                 <br />
+
+         Password: <input type="password" name="password" />
+         <br />
+                          <br />
+
+          Confirm Password: <input type="password" name="confirmPassword" />
+         <br />
+                          <br />
+
+    <input class="button" type="submit" value="Register" />
+	</form>
+	                 <p>or</p>
+	<form action="homeLink" method="get">
+	<input class="button"  type="submit" value="Login" />
+	</form>
+</div>
+</body>
+</html>

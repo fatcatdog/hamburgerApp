@@ -1,0 +1,6 @@
+package com.jacob.service;
+
+@Service("userService")
+public class UserService {
+
+}

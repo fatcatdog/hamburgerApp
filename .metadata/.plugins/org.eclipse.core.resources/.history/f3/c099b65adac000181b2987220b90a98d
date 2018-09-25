@@ -1,0 +1,9 @@
+package com.jacob.service;
+
+import com.jacob.model.Profile;
+
+public interface ProfileServiceInterface {
+
+	 public Profile findProfileById(int id);
+	 
+}

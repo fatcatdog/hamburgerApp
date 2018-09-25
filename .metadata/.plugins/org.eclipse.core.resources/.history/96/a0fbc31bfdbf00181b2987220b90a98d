@@ -1,0 +1,52 @@
+package com.jacob.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.validation.BindingResult;
+import javax.validation.Valid;
+
+import com.jacob.model.User;
+import com.jacob.service.UserService;
+
+@Controller
+//@RequestMapping("")
+public class UserController {
+	
+	@Autowired
+	 private UserService userService;
+	 
+
+	//presenting user login view
+	 @RequestMapping(value= {"/", "/login"}, method=RequestMethod.GET)
+	 public ModelAndView login() {
+	  ModelAndView model = new ModelAndView();
+	  
+	  model.setViewName("login");
+	  return model;
+	 }
+
+	 
+	//presenting user sign up view
+	 @RequestMapping(value= {"/signup"}, method=RequestMethod.GET)
+	 public ModelAndView signup() {
+	  ModelAndView model = new ModelAndView();
+	  User user = new User();
+	  model.addObject("user", user);
+	  String confirmpassword = "";
+	  model.addObject("confirmpassword", confirmpassword);
+	  model.setViewName("signup");
+	  
+	  return model;
+	 }
+	
+		public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+		
+		public static boolean validate(String emailStr) {
+		        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
+		        return matcher.find();
+		}
+	 
+}
