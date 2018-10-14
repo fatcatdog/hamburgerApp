@@ -1,0 +1,6 @@
+package com.jacob.service;
+
+@Service
+public class S3ServicesImpl implements S3Services {
+
+}

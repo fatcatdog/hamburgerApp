@@ -1,0 +1,48 @@
+package com.jacob.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+import com.jacob.dao.PictureDao;
+import com.jacob.model.Picture;
+import com.jacob.model.User;
+
+@Service("pictureService")
+public class PictureService implements PictureServiceInterface {
+
+	@Autowired
+	private PictureDao pictureDao;
+	
+	@Autowired
+	private UserService userService;
+	
+	@Override
+	public Picture findPictureById(int id) {
+		// TODO Auto-generated method stub
+		return pictureDao.findPictureById(id);
+	}
+
+	@Override
+	public void savePicture(Picture picture) {
+		// TODO Auto-generated method stub
+		pictureDao.savePicture(picture);
+	}
+
+	@Override
+	public Picture findPictureByPicUrl(String url) {
+		// TODO Auto-generated method stub
+		return pictureDao.findPictureByPicUrl(url);
+	}
+	
+	
+    public String generateKeynameForPic() {
+    	
+    	int user_id = 
+    	
+    	return "oops";
+    }
+
+
+}

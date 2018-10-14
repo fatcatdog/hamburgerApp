@@ -11,4 +11,5 @@ public interface UserServiceInterface {
 	 public void saveUser(User user);
 	 
 	 public boolean checkIfEmailIsInDb(String email);
+	 
 }

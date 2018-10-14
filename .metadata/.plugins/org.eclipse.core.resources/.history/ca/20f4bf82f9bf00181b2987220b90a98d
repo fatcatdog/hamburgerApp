@@ -1,7 +1,0 @@
-package com.jacob.dao;
-
-@Transactional
-@Repository
-public class UserDao {
-
-}

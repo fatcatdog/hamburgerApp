@@ -1,12 +1,11 @@
 package com.jacob.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.regex.Matcher;
@@ -14,9 +13,7 @@ import java.util.regex.Pattern;
 
 import javax.validation.Valid;
 
-import com.jacob.model.Profile;
 import com.jacob.model.User;
-import com.jacob.service.ProfileService;
 import com.jacob.service.UserService;
 
 @Controller
@@ -25,12 +22,8 @@ public class UserController {
 	
 	@Autowired
 	 private UserService userService;
-	
-	@Autowired
-	 private ProfileService profileService;
-	 
- 
 
+	  
 	//presenting user login view
 	 @RequestMapping(value= {"/", "/login"}, method=RequestMethod.GET)
 	 public ModelAndView login() {
@@ -116,75 +109,7 @@ public class UserController {
 			   return model; 
 			  }	  
 		 }
-	 
-	 private User getCurrentAuthUser() {
-		  //this variable will be used to get current user Authentication(where we can get there user id from) from spring security
-		 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-		 //getting user object from spring security Authentication object
-		  User tempUser = userService.findUserByEmail(auth.getName());
-		 return tempUser;
-	 }
-	 
-	 @RequestMapping(value= {"/profile"}, method=RequestMethod.GET)
-	 public ModelAndView profile() {
-	  ModelAndView model = new ModelAndView();
-	  
-	  User currentUser = getCurrentAuthUser(); 
-	  
-	  if(profileService.isUserIdInDb(currentUser.getId())) {
-		  System.out.println("Profile does exist");  
-
-		  Profile profile = profileService.findProfileByUserId(currentUser.getId());	  
-		  model.setViewName("user/profile");
-		  
-		  model.addObject("tempProfile", profile);
-
-		  model.addObject("email", currentUser.getEmail());
-		  model.addObject("first", currentUser.getFirstname());
-		  model.addObject("last", currentUser.getLastname());
-		  
-	  } else {
-		  System.out.println("Profile does not exist");  
-		  
-		  model.setViewName("user/edit");
-		  
-		  model.addObject("tempProfile", new Profile());
-		  model.addObject("email", currentUser.getEmail());
-		  model.addObject("first", currentUser.getFirstname());
-		  model.addObject("last", currentUser.getLastname());
-	  }	  
-	  
-	  return model;
-	 }
-	 
-	 @RequestMapping(value= {"/edit/profile"}, method=RequestMethod.GET)
-	 public ModelAndView editProfile() {
-	  ModelAndView model = new ModelAndView();
-	  model.setViewName("user/edit");
-	  
-	  User currentUser = getCurrentAuthUser(); 
-	  
-	  model.addObject("tempProfile", profileService.findProfileByUserId(currentUser.getId()));
-	  model.addObject("email", currentUser.getEmail());
-	  model.addObject("first", currentUser.getFirstname());
-	  model.addObject("last", currentUser.getLastname());
-	  
-	  return model;
-	 }
-	 
-	 @RequestMapping(value="/profile/saveProfile", method=RequestMethod.POST)
-	 public ModelAndView save(@ModelAttribute("tempProfile") Profile profile) {
-		 
-	  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	  User tempAuthor = userService.findUserByEmail(auth.getName());
-	  int tempAuthorId = tempAuthor.getId();
-	  
-	  profile.setUser_id(tempAuthorId);
-	  profileService.saveProfile(profile);
-	  return new ModelAndView("redirect:/home");
-	 }
-	 
 	 
 	 
 	 @RequestMapping(value= {"/access_denied"}, method=RequestMethod.GET)

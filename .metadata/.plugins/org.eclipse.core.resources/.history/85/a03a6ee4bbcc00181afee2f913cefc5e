@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:th="http://www.thymeleaf.org">
+
+<head>
+ <title>Edit Profile</title>
+</head>
+<body>
+<h1>Edit Profile</h1>
+
+<form th:object="${tempProfile}" th:action="@{/profile/saveProfile}" method="post">
+<div>
+<input type="hidden" th:field="*{id}"/>
+</div>
+
+<label>Username:</label>
+<div>
+<input type="text" th:field="*{username}" />
+</div>
+
+<label>Favorite Food:</label>
+<div>
+<input type="text" th:field="*{favorite_food}" />
+</div>
+
+<label>Favorite Food Brand:</label>
+<div>
+<input type="text" th:field="*{favorite_food_brand}" />
+</div>
+
+<label>Profile Picture:</label>
+<div>
+
+<form action="/upload" method="post" enctype="multipart/form-data">
+   <input type="file" name="files" multiple>
+   <input type="submit" value="Upload Files"></input>
+</form>
+</div>
+
+
+
+<div>
+<button type="submit" class="btn btn-primary">Save</button>
+</div>
+
+</form>
+
+
+
+ <h1><a href="/home">Home</a></h1>
+
+</body>
+</html>

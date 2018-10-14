@@ -31,5 +31,7 @@ public class UserService implements UserServiceInterface {
 	 public boolean checkIfEmailIsInDb(String email) {
 		return userDao.checkIfEmailIsInDb(email.toLowerCase());
 	}
+	
+	 
 
 }

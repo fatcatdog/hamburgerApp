@@ -17,7 +17,7 @@ public class User {
 	 private int active;
 	 
 	 private Set<Role> roles;
-
+	 
 	 public User(int id, String email, String firstname, String lastname, String password, int active, Set<Role> roles) {
 		super();
 		this.id = id;
@@ -26,6 +26,7 @@ public class User {
 		this.lastname = lastname;
 		this.password = password;
 		this.active = active;
+
 		this.roles = roles;
 	}
 	 
@@ -37,6 +38,7 @@ public class User {
 		this.lastname = lastname;
 		this.password = password;
 		this.active = active;
+
 	}
 	 
 	 public User(int id, String email, String firstname, String lastname, String password) {
@@ -51,8 +53,6 @@ public class User {
 	public User() {
 		super();
 	}
-
-
 
 	public int getId() {
 	  return id;

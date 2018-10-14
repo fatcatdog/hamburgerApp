@@ -51,9 +51,7 @@ public class UserDao {
 	 public int getANewId() {
 		 String sql = "SELECT MAX(id) from user";
 		 int number = jdbcTemplate.queryForObject(sql, Integer.class);
-		 
-//		 System.out.println("our number is: " + 0);
-		 return (number + 1); 
+ 		 return (number + 1); 
 	 }
 	 
 	 public void saveUser(User user) {

@@ -1,9 +1,0 @@
-package com.jacob.service;
-
-import org.springframework.stereotype.Service;
-
-@Service("profileService")
-public class ProfileService implements ProfileServiceInterface {
-
-	
-}

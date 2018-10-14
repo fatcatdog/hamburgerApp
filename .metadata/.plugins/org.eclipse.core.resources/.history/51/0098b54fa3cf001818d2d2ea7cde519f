@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:th="http://www.thymeleaf.org">
+ 
+<head>
+ <title>Profile Page</title>
+</head>
+
+<body>
+<h1>Profile Page</h1>
+
+ <p th:text="${email}"/></p>
+ <p th:text="${first}"/></p>
+ <p th:text="${last}"/></p>
+ <p th:text="${tempProfile.favorite_food}"/p>
+ <p th:text="${tempProfile.favorite_food_brand}"/p>
+ <p th:text="${tempProfile.username}"/p>
+ <p th:text="${tempProfile.profile_picture}"/p>
+ 
+
+</body>
+</html>
