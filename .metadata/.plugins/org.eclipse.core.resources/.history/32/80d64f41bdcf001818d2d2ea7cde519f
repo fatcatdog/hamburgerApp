@@ -47,11 +47,11 @@ public class PictureService implements PictureServiceInterface {
 
 	
 	
-    public String generateKeynameForPic(String pic_name) {
+    public String generateKeynameForPic() {
     	
     	int user_id = getCurrentAuthUser().getId();
     	String email = getCurrentAuthUser().getFirstname();
-    	 
+    	
 
     	return "oops";
     }
