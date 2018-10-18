@@ -1,7 +1,5 @@
 package com.jacob.service;
 
-import java.time.Instant;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -46,11 +44,16 @@ public class PictureService implements PictureServiceInterface {
 		  User tempUser = userService.findUserByEmail(auth.getName());
 		 return tempUser;
 	 }
+
+	
 	
     public String generateKeynameForPic(String pic_name) {
-    	String time = Instant.now().toString();
-    	String tempKey = time + "_" + pic_name;
-    	return tempKey;
+    	
+    	int user_id = getCurrentAuthUser().getId();
+    	String email = getCurrentAuthUser().getFirstname();
+    	 
+    	
+    	return "oops";
     }
 
 
