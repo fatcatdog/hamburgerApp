@@ -1,0 +1,58 @@
+package com.jacob.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.jacob.model.Picture;
+import com.jacob.service.PictureService;
+import com.jacob.service.S3ServicesInterface;
+ 
+@Controller
+public class UploadFileController {
+	
+	@Autowired
+	S3ServicesInterface s3Services;
+	
+	@Autowired
+	PictureService pictureService;
+		
+    @PostMapping("/food/upload")
+    public ModelAndView uploadMultipartFile( @RequestParam("preuploadPicFile") MultipartFile file,  @RequestParam("picName") String picname,  @RequestParam("picDescription") String description, @RequestParam("picBrand") String brand) {
+		String keyName = pictureService.generateKeynameForPic(picname);
+		
+		Picture tempPicture = new Picture(); 
+		tempPicture.setUser_id(pictureService.getCurrentAuthUser().getId());
+
+		tempPicture.setPic_url(keyName);
+		
+		tempPicture.setPic_name(picname);
+		
+		tempPicture.setDescription(description);
+		
+		tempPicture.setBrand(brand);
+
+		System.out.println("uploading pic to s3");
+		s3Services.uploadFile(keyName, file);
+		
+		System.out.println("uploading pic info to DB");
+		pictureService.savePicture(tempPicture);
+
+		  return new ModelAndView("redirect:/home");
+ 
+		  
+//		  public Picture(int id, int user_id, String pic_url, String pic_name, String description, String brand) {
+//				super();
+//				this.id = id;
+//				this.user_id = user_id;
+//				this.pic_url = pic_url;
+//				this.pic_name = pic_name;
+//				this.description = description;
+//				this.brand = brand;
+//			} 
+		
+    }    
+}

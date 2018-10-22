@@ -1,6 +1,6 @@
 package com.jacob.service;
 
-import java.time.Instant;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -20,6 +20,22 @@ public class PictureService implements PictureServiceInterface {
 	@Autowired
 	private UserService userService;
 	
+	public User getCurrentAuthUser() {
+		  //this variable will be used to get current user Authentication(where we can get there user id from) from spring security
+		 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+		 //getting user object from spring security Authentication object
+		  User tempUser = userService.findUserByEmail(auth.getName());
+		 return tempUser;
+	 }
+
+//	  public String generateKeynameForPic(String pic_name) {
+//	  	Long time =  (System.currentTimeMillis());
+//	  	String tempKey = time.toString() + pic_name;
+//	  	return tempKey;
+//	  }
+//  
+	
 	@Override
 	public Picture findPictureById(int id) {
 		// TODO Auto-generated method stub
@@ -29,6 +45,7 @@ public class PictureService implements PictureServiceInterface {
 	@Override
 	public void savePicture(Picture picture) {
 		// TODO Auto-generated method stub
+//		picture.setPic_url(generateKeynameForPic(picture.getPic_name()));
 		pictureDao.savePicture(picture);
 	}
 
@@ -38,20 +55,10 @@ public class PictureService implements PictureServiceInterface {
 		return pictureDao.findPictureByPicUrl(url);
 	}
 	
-	 private User getCurrentAuthUser() {
-		  //this variable will be used to get current user Authentication(where we can get there user id from) from spring security
-		 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-		 //getting user object from spring security Authentication object
-		  User tempUser = userService.findUserByEmail(auth.getName());
-		 return tempUser;
-	 }
-	
-    public String generateKeynameForPic(String pic_name) {
-    	String time = Instant.now().toString();
-    	String tempKey = time + "_" + pic_name;
-    	return tempKey;
+	@Override
+    public List<Picture> getAllPictures(){
+    	List<Picture> allOfOurPics = pictureDao.getAllPictures();
+    	return allOfOurPics; 
     }
-
 
 }

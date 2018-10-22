@@ -1,0 +1,5 @@
+package com.jacob.service;
+
+public interface UpvoteServiceInterface {
+
+}

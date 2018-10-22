@@ -1,0 +1,8 @@
+package com.jacob.service;
+
+import org.springframework.stereotype.Service;
+
+@Service("upvoteService")
+public class UpvoteService implements UpvoteServiceInterface {
+
+}

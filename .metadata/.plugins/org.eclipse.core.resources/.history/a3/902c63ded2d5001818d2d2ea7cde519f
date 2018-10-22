@@ -1,0 +1,9 @@
+/* .list_of_pics{
+	height: 100%;
+	width: 100%;
+}
+ */
+.list_of_pics img {
+	max-height: 100%;
+	max-width: 100%;
+}

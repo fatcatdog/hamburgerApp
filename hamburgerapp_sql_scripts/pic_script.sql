@@ -6,6 +6,7 @@ CREATE TABLE  `picture` (
   `pic_name` varchar(255) NOT NULL,
     `description` varchar(255) NOT NULL,
       `brand` varchar(255) NOT NULL,
+      `extension` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`),
     CONSTRAINT `picture` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ;

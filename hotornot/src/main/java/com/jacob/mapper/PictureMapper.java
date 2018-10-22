@@ -16,6 +16,9 @@ final class PictureMapper implements RowMapper<Picture> {
 		picture.setUser_id(rs.getInt("user_id"));
 		picture.setPic_url(rs.getString("pic_url"));
 		picture.setPic_name(rs.getString("pic_name"));
+		picture.setDescription(rs.getString("description"));
+		picture.setBrand(rs.getString("brand"));
+		picture.setBrand(rs.getString("extension"));
 		return picture; 
 	}
 
