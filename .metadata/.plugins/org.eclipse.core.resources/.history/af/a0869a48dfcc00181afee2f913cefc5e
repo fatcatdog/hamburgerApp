@@ -1,5 +1,0 @@
-package com.jacob.config;
-
-public class S3Config {
-
-}

@@ -24,13 +24,17 @@ public class UpvoteDao {
     }
     
     public int getANewId() {
-//		 String sql = "SELECT MAX(id) from upvote";
-//		 Integer number = jdbcTemplate.queryForObject(sql, Integer.class);
-//		 return (number + 1); 
-    	return 1; 
+		 String sql = "SELECT MAX(id) from upvote";
+		 Integer number = jdbcTemplate.queryForObject(sql, Integer.class);
+		 return (number + 1); 
+//    	return 1; 
 	 }
     
     public void saveUpvote(Upvote upvote) {
+    	System.out.println("vote id = " + upvote.getId());
+    	System.out.println("author id = " + upvote.getAuthor_id());
+    	System.out.println("pic id = " + upvote.getPic_id());
+
 		String sql = "INSERT INTO upvote (id, author_id, picture_id) values (?, ?, ?)";
 		int tempUpvoteId = getANewId();
 	   jdbcTemplate.update(sql, tempUpvoteId, upvote.getAuthor_id(), upvote.getPic_id());    	
@@ -75,14 +79,13 @@ public class UpvoteDao {
 	
 	public boolean checkIfUserHasVotedOnThisPictureYet(int userId, int pictureId) {
 		boolean haveTheyVotedYet = false; 
-		List<Upvote> allVotes = getAllUpvotes();
-		List<Upvote> allUpvotesWithThisPicture = new ArrayList<Upvote>();
-
-		for(int i = 0; i < allVotes.size(); i++) { 
-			if (allVotes.get(i).getPic_id() == pictureId) {
-				allUpvotesWithThisPicture.add(allVotes.get(i));
-			}
+		List<Upvote> allUpvotesWithThisPicture = getAllUpvotesForAPicture(pictureId);
+		
+		if (allUpvotesWithThisPicture.size() == 0) {
+			haveTheyVotedYet = false; 
+			return false;
 		}
+		
 		
 		for(int i = 0; i < allUpvotesWithThisPicture.size(); i++) { 
 			if(allUpvotesWithThisPicture.get(i).getAuthor_id() == userId) {

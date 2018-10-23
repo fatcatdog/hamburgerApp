@@ -1,0 +1,8 @@
+.view_one_picture{
+    text-align: center;
+}
+
+.view_one_picture img {
+	max-height: 80%;
+	max-width: 80%;
+}

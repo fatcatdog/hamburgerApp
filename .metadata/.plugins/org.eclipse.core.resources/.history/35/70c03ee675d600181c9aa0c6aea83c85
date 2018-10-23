@@ -1,0 +1,4 @@
+.main_picture img {
+	max-height: 80%;
+	max-width: 80%;
+}

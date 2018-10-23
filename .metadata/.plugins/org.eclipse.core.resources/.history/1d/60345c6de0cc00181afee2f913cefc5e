@@ -1,6 +1,0 @@
-package com.jacob.service;
-
-public interface S3Services {
-	public ByteArrayOutputStream downloadFile(String keyName);
-	public void uploadFile(String keyName, MultipartFile file);
-}

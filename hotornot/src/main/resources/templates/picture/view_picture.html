@@ -4,17 +4,22 @@
 
 <head>
  <title>Picture</title>
- <link th:href="@{css/view_a_picture.css}" rel="stylesheet"/>
+ <link th:href="@{../css/picture.css}" rel="stylesheet"/>
 </head>
 
 <body>
 <h1>Picture</h1>
 <h1><a href="/logout">Log Out</a></h1> 
- 
-<div class="view_one_picture">
-<p><img th:src="'https://s3.amazonaws.com/pics-for-project/' + ${pic.pic_url} + '.' + ${pic.extension}"/>
-</p>
-</div> 
+<h1><a href="/home">Home</a></h1> 
+<a th:href="@{'/vote/' + ${pic.id}}">upVote</a>
+<h1>Upvote Count: <span th:utext="${picUpvoteCount}"></span></h1>
 
+<div class="view_one_picture">
+<img th:src="'https://s3.amazonaws.com/pics-for-project/' + ${pic.pic_url} + '.' + ${pic.extension}"/>
+</div>
+<div>
+
+
+</div>
 </body>
 </html>

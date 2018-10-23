@@ -5,7 +5,269 @@
   <link rel="self" href="https://spring.io/blog.atom" />
   <id>http://spring.io/blog.atom</id>
   <icon>https://spring.io/favicon.ico</icon>
-  <updated>2018-10-19T16:13:00Z</updated>
+  <updated>2018-10-22T13:01:00Z</updated>
+  <entry>
+    <title>Functional Bean Registrations in Spring Cloud Function</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/10/22/functional-bean-registrations-in-spring-cloud-function" />
+    <category term="engineering" label="Engineering" />
+    <author>
+      <name>Dave Syer</name>
+    </author>
+    <id>tag:spring.io,2018-10-22:3443</id>
+    <updated>2018-10-22T13:01:00Z</updated>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;&lt;a href="https://github.com/spring-cloud/spring-cloud-function"&gt;Spring Cloud
+Function&lt;/a&gt; has a couple of new features in 2.0 (still in milestone
+phase), and possibly the most dramatic is the ability to go "fully
+functional". This is made possible by changes in Spring Boot 2.1
+together with Spring Framework 5.1, and it means a different way of
+thinking about bean definitions in Spring applications, but also
+significant improvements in startup performance.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="aws-cost-savings"&gt;&lt;a class="anchor" href="#aws-cost-savings"&gt;&lt;/a&gt;AWS Cost Savings&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;It&amp;#8217;s always good to start with a picture, especially if it tells a
+story. Here&amp;#8217;s a graph that shows the improvement in Spring Cloud
+Function 2.0 over 1.0, comparing the cost of cold starts in AWS:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="imageblock"&gt;
+&lt;div class="content"&gt;
+&lt;img src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQRWYdp_BpzQg7nA9P7xi9bjTapxu6cYrLi7PFvBmnnKM2zCuVuYzAh25KpFuz0hX0fqJyo1nJO5fyN/pubchart?oid=459598255&amp;format=image" alt="Memory Cost"&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The x-axis is memory in MB, and the y-axis is cost of a cold start in
+GBsec. The most dramatic effect is for low memory containers, where
+the cost is almost 4 times lower. The origin of the improvement is in
+dramatically shorter startup times, which in turn come from using the
+functional form of bean definitions in the application. Josh made a
+&lt;a href="https://www.youtube.com/watch?v=Q_P28p7XsbQ"&gt;video&lt;/a&gt; about functional
+bean registration a while ago if you need an introduction (it&amp;#8217;s on
+YouTube). Now let&amp;#8217;s have a closer look at how it works in Spring Cloud
+Function.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="comparing-functional-with-traditional-bean-definitions"&gt;&lt;a class="anchor" href="#comparing-functional-with-traditional-bean-definitions"&gt;&lt;/a&gt;Comparing Functional with Traditional Bean Definitions&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Here&amp;#8217;s a Spring Cloud Function application from version 1.0, with the
+familiar &lt;code&gt;@Configuration&lt;/code&gt; and &lt;code&gt;@Bean&lt;/code&gt; declaration style:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-java" data-lang="java"&gt;@SpringBootApplication
+public class DemoApplication {
+
+  @Bean
+  public Function&amp;lt;String, String&amp;gt; uppercase() {
+    return value -&amp;gt; value.toUpperCase();
+  }
+
+  public static void main(String[] args) {
+    SpringApplication.run(DemoApplication.class, args);
+  }
+
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;You can run it in AWS Lambda (for instance) by jarring it up with all
+its dependencies and uploading it to Amazon. There is also support for
+&lt;a href="https://azure.microsoft.com/en-gb/services/functions"&gt;Azure Functions&lt;/a&gt;
+and &lt;a href="https://openwhisk.apache.org/"&gt;Apache OpenWhisk&lt;/a&gt; in the
+project. Other serverless providers, e.g. &lt;a href="https://fnproject.io/"&gt;Oracle
+Fn&lt;/a&gt; and &lt;a href="https://projectriff.io/"&gt;Riff&lt;/a&gt;, maintain their own bindings.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;You can also run the app above in its own HTTP server just by
+including &lt;code&gt;spring-cloud-function-starter-web&lt;/code&gt; on the
+classpath. Running the main method would expose an endpoint that you
+can use to ping that &lt;code&gt;uppercase&lt;/code&gt; function:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code&gt;$ curl localhost:8080 -d foo
+FOO&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The web adapter in 1.0 was implemented using Spring MVC, so you needed
+a Servlet container. In Spring Cloud Function 2.0 you can also use
+Webflux and the default server is netty (even though you can still use
+Servlet containers if you want to) - just include the
+&lt;code&gt;spring-cloud-starter-function-webflux&lt;/code&gt; dependency instead. The
+functionality is the same, and the user application code can be used
+in both.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;In 2.0 though, the user application code can be recast into
+"functional" form, like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-java" data-lang="java"&gt;@SpringBootConfiguration
+public class DemoApplication
+    implements ApplicationContextInitializer&amp;lt;GenericApplicationContext&amp;gt; {
+
+  public static void main(String[] args) {
+    FunctionalSpringApplication.run(DemoApplication.class, args);
+  }
+
+  public Function&amp;lt;String, String&amp;gt; uppercase() {
+    return value -&amp;gt; value.toUpperCase();
+  }
+
+  @Override
+  public void initialize(GenericApplicationContext context) {
+    context.registerBean("demo", FunctionRegistration.class,
+        () -&amp;gt; new FunctionRegistration&amp;lt;&amp;gt;(uppercase())
+            .type(FunctionType.from(String.class).to(String.class)));
+  }
+
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The main differences are:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="ulist"&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The main class is an &lt;code&gt;ApplicationContextInitializer&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The &lt;code&gt;@Bean&lt;/code&gt; methods have been converted to calls to &lt;code&gt;context.registerBean()&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The &lt;code&gt;@SpringBootApplication&lt;/code&gt; has been replaced with
+&lt;code&gt;@SpringBootConfiguration&lt;/code&gt; to signify that we are not enabling Spring
+Boot autoconfiguration, and yet still marking the class as an "entry
+point".&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The &lt;code&gt;SpringApplication&lt;/code&gt; from Spring Boot has been replaced with a
+&lt;code&gt;FunctionalSpringApplication&lt;/code&gt; from Spring Cloud Function (it&amp;#8217;s a
+subclass).&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The business logic beans that you register in a Spring Cloud Function
+app are of type &lt;code&gt;FunctionRegistration&lt;/code&gt;. This is a wrapper that
+contains both the function and information about the input and output
+types. In the &lt;code&gt;@Bean&lt;/code&gt; form of the application that information can be
+derived reflectively, but in a functional bean registration some of it
+is lost unless we use a &lt;code&gt;FunctionRegistration&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;An alternative to using an &lt;code&gt;ApplicationContextInitializer&lt;/code&gt; and
+&lt;code&gt;FunctionRegistration&lt;/code&gt; is to make the application itself implement
+&lt;code&gt;Function&lt;/code&gt; (or &lt;code&gt;Consumer&lt;/code&gt; or &lt;code&gt;Supplier&lt;/code&gt;). Example (equivalent to the
+above):&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-java" data-lang="java"&gt;@SpringBootConfiguration
+public class DemoApplication implements Function&amp;lt;String, String&amp;gt; {
+
+  public static void main(String[] args) {
+    FunctionalSpringApplication.run(DemoApplication.class, args);
+  }
+
+  @Override
+  public String apply(String value) {
+    return value.toUpperCase();
+  }
+
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;It would also work to add a separate, standalone class of type
+&lt;code&gt;Function&lt;/code&gt; and register it with the &lt;code&gt;SpringApplication&lt;/code&gt; using an
+alternative form of the &lt;code&gt;run()&lt;/code&gt; method. The main thing is that the
+generic type information is available at runtime through the class
+declaration.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The app runs in its own HTTP server if you add
+&lt;code&gt;spring-cloud-starter-function-webflux&lt;/code&gt; (it won&amp;#8217;t work with the MVC
+starter at the moment because the functional form of the embedded
+Servlet container hasn&amp;#8217;t been implemented).  The app also runs just
+fine in AWS Lambda or Azure Functions, and the improvements in startup
+time are dramatic (as shown in the graph above). Here are the startup
+times in another graph (startup time in seconds on the y-axis):&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="imageblock"&gt;
+&lt;div class="content"&gt;
+&lt;img src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQRWYdp_BpzQg7nA9P7xi9bjTapxu6cYrLi7PFvBmnnKM2zCuVuYzAh25KpFuz0hX0fqJyo1nJO5fyN/pubchart?oid=1202364356&amp;format=image" alt="Memory Startup Time"&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="testing-functional-applications"&gt;&lt;a class="anchor" href="#testing-functional-applications"&gt;&lt;/a&gt;Testing Functional Applications&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Spring Cloud Function 2.0 also has some utilities for integration
+testing that will be very familiar to Spring Boot users. For example,
+here is an integration test for the HTTP server wrapping the app above:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-java" data-lang="java"&gt;@RunWith(SpringRunner.class)
+@FunctionalSpringBootTest
+@AutoConfigureWebTestClient
+public class FunctionalTests {
+
+	@Autowired
+	private WebTestClient client;
+
+	@Test
+	public void words() throws Exception {
+		client.post().uri("/").body(Mono.just("foo"), String.class)
+                    .exchange().expectStatus().isOk()
+                          .expectBody(String.class).isEqualTo("FOO");
+	}
+
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;This test is almost identical to the one you would write for the
+&lt;code&gt;@Bean&lt;/code&gt; version of the same app - the only difference is the
+&lt;code&gt;@FunctionalSpringBootTest&lt;/code&gt; annotation, instead of the regular
+&lt;code&gt;@SpringBootTest&lt;/code&gt;. All the other pieces, like the &lt;code&gt;@Autowired&lt;/code&gt;
+&lt;code&gt;WebTestClient&lt;/code&gt;, are standard Spring Boot features.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="functional-bean-definitions-in-mainstream-spring-boot-applications"&gt;&lt;a class="anchor" href="#functional-bean-definitions-in-mainstream-spring-boot-applications"&gt;&lt;/a&gt;Functional Bean Definitions in Mainstream Spring Boot Applications&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Spring Boot works just fine with functional bean registrations -
+Spring Cloud Function builds and runs on Spring Boot - but some of the
+most useful features in Spring Boot, the autoconfigurations, are all
+coded in the non-functional style. Most Spring Cloud Function apps
+have a relatively small scope compared to the whole of Spring Boot, so
+we are able to adapt it to these functional bean definitions
+easily. If you step outside that limited scope, you can extend your
+Spring Cloud Function app by switching back to &lt;code&gt;@Bean&lt;/code&gt; style
+configuration, or by using a hybrid approach. It will take a little
+longer to extend the same kind of features to the rest of the Spring
+Boot ecosystem, but it is something we are working on quite
+actively. Please take Spring Cloud Function 2.0 for a spin and provide
+us with some feedback if you have a moment - the GA release will be
+coming soon.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
   <entry>
     <title>Spring Cloud Data Flow 1.7 RC1 released</title>
     <link rel="alternate" href="https://spring.io/blog/2018/10/19/spring-cloud-data-flow-1-7-rc1-released" />
@@ -88,7 +350,8 @@
 &lt;p&gt;Most of the work done in Spring Boot (which helps you bootstrap Spring applications) was done so that the barrier to entry is much lower. Especially when compared to &amp;lsquo;traditional&amp;rsquo; Spring. The value proposition for Boot is even better when compared to older Java EE servers. &lt;/p&gt;
 &lt;p&gt;How does Spring Boot do this? Boot makes a few decisions for you. This abstracts massive amounts of complexity. &lt;/p&gt;&lt;h2&gt;&lt;a href="#life-is-bootiful" class="anchor" name="life-is-bootiful"&gt;&lt;/a&gt;Life is Bootiful.&lt;/h2&gt;
 &lt;p&gt;Finally, my personal favorite: &lt;a href="https://developer.okta.com/blog/2017/12/06/bootiful-development-with-spring-boot-and-react"&gt;Bootiful Development with Spring Boot and React&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;At the end of this tutorial you will have a working application with a React frontend and Spring on the backend. As a plus this tutorial also includes authentication with Okta.&lt;/p&gt;&lt;h1&gt;&lt;a href="#for-the-lsquo-seniors-rsquo-out-there" class="anchor" name="for-the-lsquo-seniors-rsquo-out-there"&gt;&lt;/a&gt;For the &amp;lsquo;seniors&amp;rsquo; out there.&lt;/h1&gt;
+&lt;p&gt;At the end of this tutorial you will have a working application with a React frontend and Spring on the backend. As a plus this tutorial also includes authentication with Okta.&lt;/p&gt;&lt;h1&gt;&lt;a href="#the-mighty-code-first-timers-only-code-tag" class="anchor" name="the-mighty-code-first-timers-only-code-tag"&gt;&lt;/a&gt;The mighty &lt;code&gt;first-timers-only&lt;/code&gt; tag.&lt;/h1&gt;
+&lt;p&gt;For those looking to get involved in contributing to Spring Boot, the github &lt;a href="https://github.com/spring-projects/spring-boot"&gt;repo&lt;/a&gt; might be a bit overwhelming. In fact, you might be asking yourself: how can I possibly get involved here? We have a tag just for this scenario: ‘first-timers-only’. We will occasionally tag issues in the repository with this label to indicate we&amp;rsquo;ll help you if you&amp;rsquo;re a brand new contributor to the project and facilitate your onboarding with the tech. Here’s an example: &lt;a href="https://github.com/spring-projects/spring-boot/issues/14599"&gt;https://github.com/spring-projects/spring-boot/issues/14599&lt;/a&gt;. Most projects also use an &lt;code&gt;ideal-for-contribution&lt;/code&gt; label to help &lt;em&gt;existing&lt;/em&gt; contributors find issues that we really want help with.&lt;/p&gt;&lt;h1&gt;&lt;a href="#for-the-lsquo-seniors-rsquo-out-there" class="anchor" name="for-the-lsquo-seniors-rsquo-out-there"&gt;&lt;/a&gt;For the &amp;lsquo;seniors&amp;rsquo; out there.&lt;/h1&gt;
 &lt;p&gt;This is a callout to all of you seasoned Spring developers. How can we make the Spring community more inclusive for the younger generation? People need to feel comfortable about starting today with Java technologies. I want to help, let me know if you also do!&lt;/p&gt;
 &lt;p&gt;If we do this right, the next JVM report show that the JVM ecosystem has evolved to include a more diverse range of developers. And more voices means that more points of view are represented, which makes our software collectively better.&lt;/p&gt;&lt;h1&gt;&lt;a href="#share-your-experience" class="anchor" name="share-your-experience"&gt;&lt;/a&gt;Share your experience!&lt;/h1&gt;
 &lt;ul&gt;
@@ -763,101 +1026,5 @@ dependencies {&#xD;
 &lt;/ul&gt;
 &lt;p&gt;View the closed issue list on &lt;a href="https://github.com/spring-cloud/spring-cloud-open-service-broker/milestone/10?closed=1"&gt;GitHub&lt;/a&gt;. The next release, 2.1.0.M2, will include support for asynchronous bindings. Watch for it in the coming weeks.&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://spring.io/projects/spring-cloud-open-service-broker"&gt;Project Page&lt;/a&gt; | &lt;a href="https://github.com/spring-cloud/spring-cloud-open-service-broker"&gt;GitHub&lt;/a&gt; | &lt;a href="https://docs.spring.io/spring-cloud-open-service-broker/docs/2.1.0.M1/reference/html5"&gt;Reference Doc&lt;/a&gt; | &lt;a href="https://docs.spring.io/spring-cloud-open-service-broker/docs/2.1.0.M1/apidocs/"&gt;API Doc&lt;/a&gt; &lt;/p&gt;</content>
-  </entry>
-  <entry>
-    <title>Spring Noticias en Español, 2 de octubre 2018</title>
-    <link rel="alternate" href="https://spring.io/blog/2018/10/03/spring-noticias-en-espa-ol-2-de-octubre-2018" />
-    <category term="engineering" label="Engineering" />
-    <author>
-      <name>Mark Heckler</name>
-    </author>
-    <id>tag:spring.io,2018-10-03:3421</id>
-    <updated>2018-10-03T08:24:00Z</updated>
-    <content type="html">&lt;div class="imageblock"&gt;
-&lt;div class="content"&gt;
-&lt;img src="https://thehecklers.com/content/images/2018/10/SpringNoticiasRecortado.png" alt="SNES logo"&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Bienvenidos a todos a la edición inaugural de Spring Noticias en Español!!&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Primero, una introducción. El español es el segundo o cuarto idioma más hablado &lt;strong&gt;en el mundo&lt;/strong&gt;, de acuerdo a las estadísticas&amp;#8230;&amp;#8203;y Spring es la marca más popular de Java en el mundo. Hasta ahora, no ha existido una manera consistente de compartir los proyectos (videos, artículos, etc.) entre la comunidad de Spring de hispanohablantes. Todos juntos, podemos cambiar eso!&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Periódicamente, publicaré noticias de tus proyectos escritos o grabados en español aquí. Ayúdame a extender tu voz y compartir tus conocimientos por todo el mundo!&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Envíame noticias de tus logros en &lt;a href="https://twitter.com/mkheck"&gt;@mkheck en Twitter&lt;/a&gt;, &lt;a href="mailto:mark@losheckler.com"&gt;mark@losheckler.com&lt;/a&gt;, o &lt;a href="mailto:mheckler@pivotal.io"&gt;mheckler@pivotal.io&lt;/a&gt; y te presentaré con la comunidad. Todos ganan!&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Para nuestra primera edición, aquí tienes unos artículos muy interesantes:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="ulist"&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;Me gustó este artículo de usar Spring Batch con Hibernate y &lt;a href="https://twitter.com/mariadb"&gt;MySQL/MariaDB&lt;/a&gt; por &lt;a href="https://twitter.com/ricardogeekk"&gt;@ricardogeekk&lt;/a&gt;: &lt;a href="https://ricardogeek.com/spring-batch-usando-hibernate-y-mysql/" class="bare"&gt;https://ricardogeek.com/spring-batch-usando-hibernate-y-mysql/&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;También por Ricardo, este artículo de construir microservicios con &lt;a href="https://twitter.com/springcloud"&gt;@SpringCloud&lt;/a&gt; y &lt;a href="https://twitter.com/apachekafka"&gt;@ApacheKafka&lt;/a&gt;: &lt;a href="https://ricardogeek.com/microservicios-en-tiempo-real-con-kafka-y-spring-cloud/" class="bare"&gt;https://ricardogeek.com/microservicios-en-tiempo-real-con-kafka-y-spring-cloud/&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Algo más por Ricardo, este sobre construir aplicaciones con &lt;a href="https://twitter.com/springboot"&gt;@SpringBoot&lt;/a&gt;: &lt;a href="https://ricardogeek.com/construyendo-una-aplicacion-java-con-spring-boot/" class="bare"&gt;https://ricardogeek.com/construyendo-una-aplicacion-java-con-spring-boot/&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Aquí tenemos un artículo interesante de @chuchip sobre usando expresiones lambdas en &lt;a href="https://twitter.com/springdata"&gt;@SpringData&lt;/a&gt; JDBC: &lt;a href="http://www.profesor-p.com/2018/09/04/expresiones-lamba-en-spring-jdbc-data-mejorando-la-explicacion/" class="bare"&gt;http://www.profesor-p.com/2018/09/04/expresiones-lamba-en-spring-jdbc-data-mejorando-la-explicacion/&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Y esta es una serie de artículos útiles sobre Spring REST y Angular:&lt;/p&gt;
-&lt;div class="ulist"&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href="http://www.profesor-p.com/2018/08/31/aplicacion-en-spring-y-angular/" class="bare"&gt;http://www.profesor-p.com/2018/08/31/aplicacion-en-spring-y-angular/&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href="http://www.profesor-p.com/2018/09/03/aplicacion-en-spring-rest-y-angular-2-parte/" class="bare"&gt;http://www.profesor-p.com/2018/09/03/aplicacion-en-spring-rest-y-angular-2-parte/&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href="http://www.profesor-p.com/2018/09/04/aplicacion-en-spring-rest-y-angular-3a-parte/" class="bare"&gt;http://www.profesor-p.com/2018/09/04/aplicacion-en-spring-rest-y-angular-3a-parte/&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href="http://www.profesor-p.com/2018/09/05/aplicacion-en-spring-rest-y-angular-4a-parte/" class="bare"&gt;http://www.profesor-p.com/2018/09/05/aplicacion-en-spring-rest-y-angular-4a-parte/&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href="http://www.profesor-p.com/2018/09/06/aplicacion-en-spring-rest-y-angular-5a-parte/" class="bare"&gt;http://www.profesor-p.com/2018/09/06/aplicacion-en-spring-rest-y-angular-5a-parte/&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Este artículo profundo fue escrito por otro Java Champion, &lt;a href="https://twitter.com/jamdiazdiaz"&gt;@jamdiazdiaz&lt;/a&gt;, sobre monitoreando tu microservicios de &lt;a href="https://twitter.com/springboot"&gt;@SpringBoot&lt;/a&gt; con Spring Boot Admin: &lt;a href="http://blog.joedayz.pe/2018/08/monitoreando-tus-micro-servicios-con.html" class="bare"&gt;http://blog.joedayz.pe/2018/08/monitoreando-tus-micro-servicios-con.html&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Y ahora algo un poco diferente (pero interesante!), unos scripts de Groovy por &lt;a href="https://twitter.com/101GroovyScript"&gt;@101GroovyScript&lt;/a&gt; para mejorar tu vida "Groovy": &lt;a href="https://groovy-lang.gitlab.io/101-scripts/" class="bare"&gt;https://groovy-lang.gitlab.io/101-scripts/&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Y finalmente para esta edición, un artículo fascinante de como construir una aplicación web con &lt;a href="https://twitter.com/vaadin"&gt;@Vaadin&lt;/a&gt; Flow con &lt;a href="https://twitter.com/springboot"&gt;@SpringBoot&lt;/a&gt;, &lt;a href="https://twitter.com/springdata"&gt;@SpringData&lt;/a&gt; JPA, y &lt;a href="https://twitter.com/mariadb"&gt;MySQL/MariaDB&lt;/a&gt;: &lt;a href="http://geovanny0401.blogspot.com/2018/08/construir-una-aplicacion-web-con-vaadin.html" class="bare"&gt;http://geovanny0401.blogspot.com/2018/08/construir-una-aplicacion-web-con-vaadin.html&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Es todo por ahora! Pero si te gustaría ver tus proyectos/noticias en este boletín y ayudar tus compañeros, envíamelos! Mis datos de contacto son:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="ulist"&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href="https://twitter.com/mkheck"&gt;@mkheck en Twitter&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href="mailto:mark@losheckler.com"&gt;mark@losheckler.com&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;a href="mailto:mheckler@pivotal.io"&gt;mheckler@pivotal.io&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;div class="paragraph"&gt;
-&lt;p&gt;Ayúdame a extender tu voz y compartir tus conocimientos! Hasta la próxima edición&amp;#8230;&amp;#8203;&lt;/p&gt;
-&lt;/div&gt;</content>
   </entry>
 </feed>

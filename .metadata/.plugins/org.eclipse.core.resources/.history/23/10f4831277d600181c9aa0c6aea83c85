@@ -1,0 +1,9 @@
+.view_one_picture{
+	margin: auto;
+    width: 50%;
+}
+
+.view_one_picture img {
+	max-height: 80%;
+	max-width: 80%;
+}
