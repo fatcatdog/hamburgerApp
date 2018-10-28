@@ -3,16 +3,18 @@ package com.jacob.model;
 public class Upvote {
 int id; 
 int author_id; 
-int pic_id;
+int picture_id;
 
-public Upvote(int id, int author_id, int pic_id) {
+public Upvote(int id, int author_id, int picture_id) {
 	super();
 	this.id = id;
 	this.author_id = author_id;
-	this.pic_id = pic_id;
+	this.picture_id = picture_id;
 }
 
-public Upvote() {}
+public Upvote() {
+	super();
+}
 
 
 public int getId() {
@@ -27,11 +29,11 @@ public int getAuthor_id() {
 public void setAuthor_id(int author_id) {
 	this.author_id = author_id;
 }
-public int getPic_id() {
-	return pic_id;
+public int getPicture_id() {
+	return picture_id;
 }
-public void setPic_id(int pic_id) {
-	this.pic_id = pic_id;
+public void setPicture_id(int picture_id) {
+	this.picture_id = picture_id;
 } 
 
 

@@ -1,0 +1,22 @@
+package com.jacob.model;
+
+public class Comment {
+int id; 
+int picture_id; 
+String content;
+
+
+public Comment(int id, int picture_id, String content) {
+	super();
+	this.id = id;
+	this.picture_id = picture_id;
+	this.content = content;
+} 
+
+public Comment() {
+	super();
+
+}
+
+
+}

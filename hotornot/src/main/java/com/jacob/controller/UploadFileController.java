@@ -23,8 +23,12 @@ public class UploadFileController {
 		
     @PostMapping("/food/upload")
     public ModelAndView uploadMultipartFile( @RequestParam("preuploadPicFile") MultipartFile file,  @RequestParam("picName") String picname,  @RequestParam("picDescription") String description, @RequestParam("picBrand") String brand) {
-		    	
 		String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+ 
+    	if (file == null ||picname.equals("") || description.equals("")|| brand.equals("") || extension.equals("")) {
+    		System.out.println("Something went wrong you have to input all info of file!");
+    		return new ModelAndView("redirect:/home"); 
+    	}
 
 		Long time =  (System.currentTimeMillis());
 	  	String keyName = time.toString() + picname;

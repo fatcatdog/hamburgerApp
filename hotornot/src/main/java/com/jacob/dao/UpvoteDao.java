@@ -33,11 +33,11 @@ public class UpvoteDao {
     public void saveUpvote(Upvote upvote) {
     	System.out.println("vote id = " + upvote.getId());
     	System.out.println("author id = " + upvote.getAuthor_id());
-    	System.out.println("pic id = " + upvote.getPic_id());
+    	System.out.println("pic id = " + upvote.getPicture_id());
 
 		String sql = "INSERT INTO upvote (id, author_id, picture_id) values (?, ?, ?)";
 		int tempUpvoteId = getANewId();
-	   jdbcTemplate.update(sql, tempUpvoteId, upvote.getAuthor_id(), upvote.getPic_id());    	
+	   jdbcTemplate.update(sql, tempUpvoteId, upvote.getAuthor_id(), upvote.getPicture_id());    	
     }
     
     public List<Upvote> getAllUpvotes(){
@@ -64,29 +64,40 @@ public class UpvoteDao {
     	jdbcTemplate.update(sql, id);
 	}
 	
-	public int countUpvotes(int picId) {
+	public int countUpvotes(int tempPicId) {
 		int count = 0; 
 		
 		List<Upvote> allVotes = getAllUpvotes();
 		
 		for(int i = 0; i < allVotes.size(); i++) {
-			if(allVotes.get(i).getPic_id() == picId) {
+			
+			System.out.println("upvote picid = " + allVotes.get(i).getPicture_id());
+			System.out.println("upvote id = " + allVotes.get(i).getId());
+			System.out.println("upvote author = " + allVotes.get(i).getAuthor_id());
+
+			if(allVotes.get(i).getPicture_id() == tempPicId) {
 				count++;
 			}
 		}
+		System.out.println(count);
 		return count; 
+		
 	} 
 	
 	public boolean checkIfUserHasVotedOnThisPictureYet(int userId, int pictureId) {
 		boolean haveTheyVotedYet = false; 
 		List<Upvote> allUpvotesWithThisPicture = getAllUpvotesForAPicture(pictureId);
-		
+		System.out.println("User id is = " + userId + " Pic id is = " + pictureId);
+
+		System.out.println("First loop to get all pic votes");
 		if (allUpvotesWithThisPicture.size() == 0) {
 			haveTheyVotedYet = false; 
 			return false;
 		}
 		
-		
+		System.out.println();
+		System.out.println("Second loop to get all pic votes with user id");
+
 		for(int i = 0; i < allUpvotesWithThisPicture.size(); i++) { 
 			if(allUpvotesWithThisPicture.get(i).getAuthor_id() == userId) {
 				haveTheyVotedYet = true; 
@@ -102,7 +113,7 @@ public class UpvoteDao {
 		List<Upvote> allUpvotesWithThisPicture = new ArrayList<Upvote>();
 
 		for(int i = 0; i < allVotes.size(); i++) { 
-			if (allVotes.get(i).getPic_id() == pictureId) {
+			if (allVotes.get(i).getPicture_id() == pictureId) {
 				allUpvotesWithThisPicture.add(allVotes.get(i));
 			}
 		}

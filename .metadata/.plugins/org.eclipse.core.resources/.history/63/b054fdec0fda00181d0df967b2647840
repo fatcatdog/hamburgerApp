@@ -1,0 +1,9 @@
+.list_of_pics{
+}
+
+.list_of_pics img {
+	max-height: 20%;
+	max-width: 20%;
+
+	
+}

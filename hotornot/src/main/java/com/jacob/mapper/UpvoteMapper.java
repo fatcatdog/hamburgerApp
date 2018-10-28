@@ -15,7 +15,7 @@ final class UpvoteMapper implements RowMapper<Upvote> {
 		Upvote upvote = new Upvote(); 
 		upvote.setId(rs.getInt("id"));
 		upvote.setAuthor_id(rs.getInt("author_id"));
-		upvote.setPic_id(rs.getInt("picture_id"));
+		upvote.setPicture_id(rs.getInt("picture_id"));
 		
 		return upvote;
 	}

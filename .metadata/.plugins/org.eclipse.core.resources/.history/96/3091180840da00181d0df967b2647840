@@ -1,0 +1,9 @@
+package com.jacob.mapper;
+
+import org.springframework.jdbc.core.RowMapper;
+
+import com.jacob.model.Picture;
+
+final class CommentMapper implements RowMapper<Comment> {
+
+}

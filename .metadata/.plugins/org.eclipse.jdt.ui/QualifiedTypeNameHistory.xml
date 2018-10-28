@@ -51,11 +51,12 @@
 <fullyQualifiedTypeName name="com.jacob.service.PictureService"/>
 <fullyQualifiedTypeName name="org.springframework.jdbc.core.RowMapper"/>
 <fullyQualifiedTypeName name="org.springframework.jdbc.core.BeanPropertyRowMapper"/>
-<fullyQualifiedTypeName name="com.jacob.model.Upvote"/>
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="com.jacob.dao.UpvoteDao"/>
 <fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.PathVariable"/>
 <fullyQualifiedTypeName name="com.jacob.model.Picture"/>
+<fullyQualifiedTypeName name="com.jacob.service.UpvoteService"/>
+<fullyQualifiedTypeName name="com.jacob.model.Upvote"/>
 </qualifiedTypeNameHistroy>

@@ -23,6 +23,7 @@ public class PictureController {
 
 	 @RequestMapping(value= {"/picture/{id}"}, method=RequestMethod.GET)
 	 public ModelAndView viewPicture(@PathVariable(value = "id",  required =false) int id) {
+		 System.out.println("Our pic id is: " + id);
 		 ModelAndView model = new ModelAndView();
 		 model.setViewName("picture/view_picture");
 		 Picture ourPic = pictureService.findPictureById(id);
@@ -44,7 +45,7 @@ public class PictureController {
 		 if(!upvoteService.checkIfUserHasVotedOnThisPictureYet(currentUserId, currentPic.getId())) {
 			Upvote tempUpvote = new Upvote();
 			tempUpvote.setAuthor_id(currentUserId);
-			tempUpvote.setPic_id(currentPic.getId());
+			tempUpvote.setPicture_id(currentPic.getId());
 			upvoteService.saveUpvote(tempUpvote);
 		 } else {
 			 int tempUpvoteId = upvoteService.getUserUpvoteByUserIdAndPictureId(currentUserId, currentPic.getId());

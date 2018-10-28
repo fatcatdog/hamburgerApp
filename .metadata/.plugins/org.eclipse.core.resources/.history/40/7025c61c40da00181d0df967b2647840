@@ -1,0 +1,7 @@
+package com.jacob.mapper;
+
+import org.springframework.jdbc.core.RowMapper;
+
+final class CommentMapper implements RowMapper<Comment> {
+
+}
