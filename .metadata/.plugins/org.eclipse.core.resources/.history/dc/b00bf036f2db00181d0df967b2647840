@@ -19,15 +19,13 @@
 </div>
 <div>
 
-<div class="addComment">
-<form action="/comment/save" method="post">
-	<input type="text" name="commentContent" placeholder="Comment text">
-	<input type="hidden" name="picId" th:value="${pic.id}">
-   <input type="submit" value="Upload Files"></input>
+<c:url var="save_comment_url"  value="/saveComment/${blogId}" />
+<form action="${save_comment_url}" method="post">
+       <textarea id="content" name="content" rows="5" cols="30"></textarea>
+			 <br/>
+			 <br/>
+    <input class="button" type="submit" value="Publish Comment" />
 </form>
-</div>
-
-</div>
 
 </div>
 </body>

@@ -22,7 +22,7 @@
 <div class="addComment">
 <form action="/comment/save" method="post">
 	<input type="text" name="commentContent" placeholder="Comment text">
-	<input type="hidden" name="picId" th:value="${pic.id}">
+	<input type="hidden" name="picId" value="${pic.id}">
    <input type="submit" value="Upload Files"></input>
 </form>
 </div>

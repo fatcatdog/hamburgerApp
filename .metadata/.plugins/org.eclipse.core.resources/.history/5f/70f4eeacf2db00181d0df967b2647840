@@ -1,0 +1,18 @@
+package com.jacob.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.jacob.service.CommentService;
+import com.jacob.service.PictureService;
+
+public class CommentController {
+
+	@Autowired
+	PictureService pictureService;
+	
+	@Autowired
+	CommentService commentService;
+	
+
+	
+}

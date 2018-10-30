@@ -1,0 +1,28 @@
+package com.jacob.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.jacob.service.CommentService;
+import com.jacob.service.PictureService;
+
+public class CommentController {
+
+	@Autowired
+	PictureService pictureService;
+	
+	 @Autowired
+	 private UserService userService;
+	
+	@Autowired
+	CommentService commentService;
+	
+	 private User getCurrentAuthUser() {
+		  //this variable will be used to get current user Authentication(where we can get there user id from) from spring security 
+		 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		 
+		 //getting user object from spring security Authentication object 
+		  User tempUser = userService.findUserByEmail(auth.getName());
+		 return tempUser;
+	 }
+	
+}
