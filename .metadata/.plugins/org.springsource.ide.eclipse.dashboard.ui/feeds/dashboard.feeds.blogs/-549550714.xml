@@ -118,6 +118,7 @@ public Function&amp;lt;String, String&amp;gt; wrapInQuotes() {&#xD;
 &lt;ul&gt;
   &lt;li&gt;Hibernate 5.3&lt;/li&gt;
   &lt;li&gt;Micrometer 1.1&lt;/li&gt;
+  &lt;li&gt;Reactor Californium&lt;/li&gt;
   &lt;li&gt;Spring Data Lovelace&lt;/li&gt;
   &lt;li&gt;Spring Framework 5.1&lt;/li&gt;
   &lt;li&gt;Tomcat 9&lt;/li&gt;

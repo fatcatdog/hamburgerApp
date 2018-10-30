@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.jacob.dao.CommentDao;
 import com.jacob.model.Comment;
-import com.jacob.model.User;
 
 @Service("commentService")
 public class CommentService implements CommentServiceInterface {
@@ -49,13 +48,13 @@ public class CommentService implements CommentServiceInterface {
 	@Override 
 	public List<String> getAllAuthorsOfCommentsByPicId(int id){
 		List<String> authorNames = new ArrayList<String>();
+		
 		List<Comment> comments = getAllCommentsForAPicture(id);
 		
 		for(int i = 0; i < comments.size(); i++) {
-			User user = userService.findUserById(comments.get(i).getAuthor_id());
-			authorNames.add(user.getFirstname() + " " + user.getLastname());
+			User user = 
 		}
 		
-		return authorNames;
+		
 	}
 }
