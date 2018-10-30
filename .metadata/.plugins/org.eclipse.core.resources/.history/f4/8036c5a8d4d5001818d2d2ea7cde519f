@@ -1,9 +1,0 @@
-package com.jacob.model;
-
-public class Upvote {
-int id; 
-int author_id; 
-int pic_id; 
-
-
-}

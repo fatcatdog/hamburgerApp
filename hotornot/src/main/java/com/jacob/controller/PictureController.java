@@ -1,5 +1,7 @@
 package com.jacob.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jacob.model.Picture;
+import com.jacob.model.Comment;
 import com.jacob.model.Upvote;
+import com.jacob.service.CommentService;
 import com.jacob.service.PictureService;
 import com.jacob.service.UpvoteService;
 
@@ -20,6 +24,9 @@ public class PictureController {
 	
 	@Autowired
 	UpvoteService upvoteService;
+	
+	@Autowired
+	CommentService commentService;
 
 	 @RequestMapping(value= {"/picture/{id}"}, method=RequestMethod.GET)
 	 public ModelAndView viewPicture(@PathVariable(value = "id",  required =false) int id) {
@@ -29,6 +36,10 @@ public class PictureController {
 		 Picture ourPic = pictureService.findPictureById(id);
 		 model.addObject("pic", ourPic);
 		 
+		 List<Comment> picComments = commentService.getAllCommentsForAPicture(id);
+		 
+		 model.addObject("comments", picComments);
+
 		 int upvoteCount = upvoteService.countUpvotes(id);
 		 model.addObject("picUpvoteCount", upvoteCount);
 		 

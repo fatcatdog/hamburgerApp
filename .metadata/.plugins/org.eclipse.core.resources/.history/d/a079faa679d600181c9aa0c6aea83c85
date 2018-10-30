@@ -1,9 +1,0 @@
-.view_one_picture{
-    text-align: center;
-    width: 50%;
-}
-
-.view_one_picture img {
-	max-height: 30%;
-	max-width: 30%;
-}
