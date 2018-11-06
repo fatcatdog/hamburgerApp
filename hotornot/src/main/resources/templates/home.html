@@ -32,11 +32,16 @@
 
 <div class="list_of_pics">
 <tr th:each="pic,iterStat : ${pics}">
+
+<div>
+</div>
+
 <figure>
    <a th:href="@{'/picture/' + ${pic.id}}">
     <img th:src="'https://s3.amazonaws.com/pics-for-project/' + ${pic.pic_url} + '.' + ${pic.extension}"/> 
-    <figcaption>Popularity: <td th:text="${counts[iterStat.index]}"></td></figcaption>
+    <figcaption>Votes: <td th:text="${counts[iterStat.index]}"></td></figcaption>
     </a>
+    
 </figure>
 </tr>
 </div>

@@ -1,9 +1,0 @@
-.list_of_pics{
-	text-align: justify;
-}
-
-.list_of_pics img {
-	max-height: 20%;
-	max-width: 20%;
-	
-}

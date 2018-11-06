@@ -8,8 +8,8 @@ box-sizing: border-box;
 }
 
 .list_of_pics img {
-	max-height: 20%;
-	max-width: 20%;
+	max-height: 50%;
+	max-width: 50%;
 	min-height: 20%;
 	min-width: 20%;
 	flex: 100%%;

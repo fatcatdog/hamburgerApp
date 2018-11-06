@@ -36,11 +36,15 @@ public class PictureController {
 		 Picture ourPic = pictureService.findPictureById(id);
 		 model.addObject("pic", ourPic);
 		 
+		 
 		 List<Comment> picComments = commentService.getAllCommentsForAPicture(id);
-		 List<String> commentAuthors = commentService.getAllAuthorsOfCommentsByPicId(id);
+		 
+//Initially I wanted to add comments authors so user could find out more about users who comment but im going to hold off for now. 
+//		 List<String> commentAuthors = commentService.getAllAuthorsOfCommentsByPicId(id);
+//		 model.addObject("commentAuthors", commentAuthors);
+
 		 
 		 model.addObject("comments", picComments);
-		 model.addObject("commentAuthors", commentAuthors);
 
 		 int upvoteCount = upvoteService.countUpvotes(id);
 		 model.addObject("picUpvoteCount", upvoteCount);

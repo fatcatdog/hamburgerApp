@@ -42,15 +42,11 @@
 <fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
 <fullyQualifiedTypeName name="com.jacob.model.Picture"/>
 <fullyQualifiedTypeName name="com.jacob.model.Upvote"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="com.jacob.service.UpvoteService"/>
 <fullyQualifiedTypeName name="org.springframework.jdbc.core.RowMapper"/>
 <fullyQualifiedTypeName name="org.springframework.jdbc.core.BeanPropertyRowMapper"/>
-<fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="com.jacob.dao.CommentDao"/>
-<fullyQualifiedTypeName name="com.jacob.service.CommentService"/>
 <fullyQualifiedTypeName name="com.jacob.service.UserService"/>
-<fullyQualifiedTypeName name="com.jacob.model.User"/>
 <fullyQualifiedTypeName name="org.springframework.security.core.Authentication"/>
 <fullyQualifiedTypeName name="org.springframework.security.core.context.SecurityContextHolder"/>
 <fullyQualifiedTypeName name="org.springframework.stereotype.Controller"/>
@@ -60,4 +56,8 @@
 <fullyQualifiedTypeName name="com.jacob.model.Comment"/>
 <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.PathVariable"/>
 <fullyQualifiedTypeName name="org.springframework.web.servlet.ModelAndView"/>
+<fullyQualifiedTypeName name="com.jacob.service.CommentService"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="com.jacob.model.User"/>
 </qualifiedTypeNameHistroy>
