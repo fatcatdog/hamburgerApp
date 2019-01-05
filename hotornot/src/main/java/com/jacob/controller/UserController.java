@@ -17,7 +17,7 @@ import com.jacob.model.User;
 import com.jacob.service.UserService;
 
 @Controller
-//@RequestMapping("")
+@RequestMapping("")
 public class UserController {
 	
 	@Autowired

@@ -1,0 +1,25 @@
+.list_of_pics { 
+/*   display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+  align-items: stretch;
+  justify-items: center;
+   */
+  line-height: 0;
+   
+  -webkit-column-count: 5;
+  -webkit-column-gap:   0px;
+  -moz-column-count:    5;
+  -moz-column-gap:      0px;
+  column-count:         5;
+  column-gap:           0px;  
+  }
+  
+.picture img {
+filter: drop-shadow(0 0 0.75rem black);
+/*   max-width: 100%;
+  max-height: max-width;
+   */
+    width: 100% !important;
+  height: auto !important;
+}

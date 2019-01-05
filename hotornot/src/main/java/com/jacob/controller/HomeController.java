@@ -37,40 +37,15 @@ public class HomeController {
 	 public ModelAndView home() {
 	  ModelAndView model = new ModelAndView();
 	  List<Picture> allOfOurPics = pictureService.getAllPictures(); 
-	  List<List<Picture>> ourRows = new ArrayList<List<Picture>>();
-	  
-	  //We still need to send to send these rows of pics to view and this isn't working properly
-	  for(int i = 0; i < allOfOurPics.size() / 3; i++) {
-		  int counter = 0; 
-
-		  List<Picture> aRowOf3Pics = new ArrayList<Picture>();
-		  for(int j = counter; j < counter + 2; j++) {
-			  aRowOf3Pics.add(allOfOurPics.get(counter));
-		  }
-		  ourRows.add(aRowOf3Pics);
-		  counter = counter + 2;
-	  }
-	  
-	  System.out.println( "ourRows size: " + ourRows.size());
-	  
-	  for(int i = 0; i < ourRows.size() / 3; i++) {
-		 System.out.println("We have a row of 3 pics");
-		 for(int j = 0; j < 3; j++) {
-			 System.out.println("Pic id is: " + ourRows.get(i).get(j).getId());
-		 }
-		 
-	  }
 	  
 	  model.setViewName("home");
 	  model.addObject("sizeOfPicList", allOfOurPics.size());
 	  model.addObject("pics", allOfOurPics);
 	  model.addObject("counts", getAllUpvoteCounts(allOfOurPics));
 	  
-	  
-	  for(int i = 0; i < allOfOurPics.size(); i++) {
-		  System.out.println(allOfOurPics.get(i).getPic_url());
-	  }
 	  return model;
 	 }
+	 
+	 
 
 }

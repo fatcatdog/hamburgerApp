@@ -1,5 +1,6 @@
 package com.jacob.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.jacob.model.Picture;
 import com.jacob.model.Comment;
+import com.jacob.model.Picture;
 import com.jacob.model.Upvote;
+import com.jacob.model.User;
 import com.jacob.service.CommentService;
 import com.jacob.service.PictureService;
 import com.jacob.service.UpvoteService;
+import com.jacob.service.UserService;
 
 @Controller
 public class PictureController {
@@ -23,32 +26,40 @@ public class PictureController {
 	PictureService pictureService;
 	
 	@Autowired
+	UserService userService;
+	
+	@Autowired
 	UpvoteService upvoteService;
 	
 	@Autowired
 	CommentService commentService;
+	
+	public List<Comment> getCommentsFromPicId(int id){
+		return commentService.getAllCommentsForAPicture(id);
+	}
+	
+//	public List<String> getAuthorNamesFromPicId(List<Comment> comments){
+//		List<String> commentAuthors = new ArrayList<String>(); 
+//		
+//		for(int i = 0; i < comments.size(); i++) {
+//			User author = userService.findUserById(comments.get(i).getAuthor_id());
+//			commentAuthors.add(author.getFirstname());
+//		}
+//		return commentAuthors;
+//	}
 
 	 @RequestMapping(value= {"/picture/{id}"}, method=RequestMethod.GET)
 	 public ModelAndView viewPicture(@PathVariable(value = "id",  required =false) int id) {
-		 System.out.println("Our pic id is: " + id);
 		 ModelAndView model = new ModelAndView();
-		 model.setViewName("picture/view_picture");
+		 model.setViewName("picture/picture");
 		 Picture ourPic = pictureService.findPictureById(id);
-		 model.addObject("pic", ourPic);
 		 
+		 List<Comment> comments = getCommentsFromPicId(id);
 		 
-		 List<Comment> picComments = commentService.getAllCommentsForAPicture(id);
-		 
-//Initially I wanted to add comments authors so user could find out more about users who comment but im going to hold off for now. 
-//		 List<String> commentAuthors = commentService.getAllAuthorsOfCommentsByPicId(id);
-//		 model.addObject("commentAuthors", commentAuthors);
-
-		 
-		 model.addObject("comments", picComments);
-
-		 int upvoteCount = upvoteService.countUpvotes(id);
-		 model.addObject("picUpvoteCount", upvoteCount);
-		 
+		 model.addObject("ourPicObj", ourPic);
+		 model.addObject("picUrl", ourPic.getPic_url());
+		 model.addObject("picExt", ourPic.getExtension());
+		 model.addObject("comments", comments);
 		 return model;
 	 }
 	 

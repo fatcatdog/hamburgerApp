@@ -1,5 +1,6 @@
 package com.jacob.controller;
 
+import java.io.IOException;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,11 +23,10 @@ public class UploadFileController {
 	PictureService pictureService;
 		
     @PostMapping("/food/upload")
-    public ModelAndView uploadMultipartFile( @RequestParam("preuploadPicFile") MultipartFile file,  @RequestParam("picName") String picname,  @RequestParam("picDescription") String description, @RequestParam("picBrand") String brand) {
+    public ModelAndView uploadMultipartFile( @RequestParam("preuploadPicFile") MultipartFile file,  @RequestParam("picName") String picname,  @RequestParam("picDescription") String description, @RequestParam("picBrand") String brand) throws IOException {
 		String extension = FilenameUtils.getExtension(file.getOriginalFilename());
  
     	if (file == null ||picname.equals("") || description.equals("")|| brand.equals("") || extension.equals("")) {
-    		System.out.println("Something went wrong you have to input all info of file!");
     		return new ModelAndView("redirect:/home"); 
     	}
 
@@ -46,12 +46,10 @@ public class UploadFileController {
 		tempPicture.setBrand(brand);
 		
 		tempPicture.setExtension(extension);
-
+	      
 		s3Services.uploadFile(keyName + "." + extension, file);
-		System.out.println("uploaded pic to s3");
 
 		pictureService.savePicture(tempPicture);
-		System.out.println("saved pic info to DB");
 
 		return new ModelAndView("redirect:/home"); 
 		

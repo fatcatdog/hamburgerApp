@@ -5,6 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,7 +17,7 @@ import com.jacob.service.PictureService;
 import com.jacob.service.UserService;
 
 @Controller
-@RequestMapping("comment")
+@RequestMapping("")
 public class CommentController {
 
 	@Autowired
@@ -37,28 +38,26 @@ public class CommentController {
 		 return tempUser;
 	 }
 	 
-	 @RequestMapping(value="save", method=RequestMethod.POST)
-	 public ModelAndView save(@ModelAttribute("picId") String picId, @ModelAttribute("commentContent") String commentContent) {
-		 System.out.println("save comment called in comment controller");
-		 System.out.println("pic id is " + picId);
+//	 @RequestMapping(value="saveComment/{id}", method=RequestMethod.POST)
+//	 public ModelAndView save(@PathVariable(value = "id", required =false) int id, @ModelAttribute("tempComment") Comment comment) {
 
+	 
+	 @RequestMapping(value="saveComment/{id}", method=RequestMethod.POST)
+	 public ModelAndView save(@PathVariable(value = "id", required = false) int id, @ModelAttribute("content") Comment comment) {
+		
 		 //getting auth information 
 		 User tempAuthor = getCurrentAuthUser();
 
 		 //check if comment is empty string if so just reshow blog
-		 if(commentContent.trim().length()==0) {
-			  return new ModelAndView("redirect:/picture/" + picId);
+		 if(comment.getContent().trim().length()==0) {
+			  return new ModelAndView("redirect:/picture/" + id);
 		 }
 		 
 		 //saving comment 
-		 Comment tempComment = new Comment(); 
-		 
-		 tempComment.setAuthor_id(tempAuthor.getId());
-		 tempComment.setPicture_id(Integer.parseInt(picId));
-		 tempComment.setContent(commentContent);
-		 commentService.saveComment(tempComment);
-			 
-	  return new ModelAndView("redirect:/picture/" + picId);
+		 comment.setAuthor_id(tempAuthor.getId());
+		 comment.setPicture_id((id));
+		 commentService.saveComment(comment);
+			 return new ModelAndView("redirect:/picture/" + (id));
 	  
 	 }
 	

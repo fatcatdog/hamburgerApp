@@ -1,0 +1,37 @@
+.mainPic {
+}
+
+.commentSection {
+	text-align: center; 
+}
+
+.mainPic img {
+	display: block;
+	margin: 0 auto;
+	max-width: 80%;
+	filter: drop-shadow(0 0 0.75rem black);
+}
+
+.listOfComments {
+	text-align: center;
+	
+}
+
+.listOfComments h2 {
+}
+
+.comments p {
+	
+}
+
+.comment {
+  width: 300px;
+  margin: 20px auto;
+  background: white;
+  padding: 10px;
+text-align: center;
+font-weight: 900;
+  color: black;
+  font-family: arial;
+  position:relative;
+}
